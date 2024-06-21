@@ -2,10 +2,10 @@ package main
 
 import (
 	"GoRoutine/Mohammed/exercices"
-	// "fmt"
+	"fmt"
 	// "time"
-	// "math/rand"
-	"sync"
+	// // "math/rand"
+	// "sync"
 
 )
 
@@ -44,20 +44,39 @@ func main() {
 
 
 	//Exercice 3
-	ch := make(chan int, 5)
-	var wg sync.WaitGroup
+	// ch := make(chan int, 5)
+	// var wg sync.WaitGroup
 
-	for i := 1; i <= 3; i++ {
-		wg.Add(1)
-		go exercices.Producer(i, ch, &wg)
+	// for i := 1; i <= 3; i++ {
+	// 	wg.Add(1)
+	// 	go exercices.Producer(i, ch, &wg)
+	// }
+
+	// for i := 1; i <= 3; i++ {
+	// 	wg.Add(1)
+	// 	go exercices.Consumer(i, ch, &wg)
+	// }
+
+	// wg.Wait()
+	// close(ch)
+
+
+	// Exercice 4
+
+	ch1 := make(chan int)
+	ch2 := make(chan int)
+
+
+	go exercices.EchoInChan(1, ch1)
+	go exercices.EchoInChan(2, ch2)
+
+	
+	for {
+		select {
+		case val := <-ch1:
+			fmt.Printf("Reçu du channel 1: %d\n", val)
+		case val := <-ch2:
+			fmt.Printf("Reçu du channel 2: %d\n", val)
+		}
 	}
-
-	for i := 1; i <= 3; i++ {
-		wg.Add(1)
-		go exercices.Consumer(i, ch, &wg)
-	}
-
-	wg.Wait()
-	close(ch)
-
 }
