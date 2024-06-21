@@ -1,17 +1,35 @@
 package main
 
 import (
-	"GoRoutine/Mohammed/exercices"
+	"sync"
+	// "GoRoutine/Mohammed/exercices"
 	"fmt"
-	// "time"
+	"time"
 	// // "math/rand"
 	// "sync"
 
 )
 
 
+	// Pour Exercice 5
+	var (
+		counter int
+		mu sync.Mutex
+	)
 
-func main() {
+	func increment(wg *sync.WaitGroup) {
+		defer wg.Done()
+		for i := 0; i < 100; i++ {
+			mu.Lock()
+			counter++
+			mu.Unlock()
+			time.Sleep(time.Millisecond * 10)
+		}
+	}
+
+	func main() {
+
+
 
 	// Exercice 1
 	// var input string
@@ -61,22 +79,38 @@ func main() {
 	// close(ch)
 
 
+
 	// Exercice 4
 
-	ch1 := make(chan int)
-	ch2 := make(chan int)
+	// ch1 := make(chan int)
+	// ch2 := make(chan int)
 
-
-	go exercices.EchoInChan(1, ch1)
-	go exercices.EchoInChan(2, ch2)
-
+	// go exercices.EchoInChan(1, ch1)
+	// go exercices.EchoInChan(2, ch2)
 	
-	for {
-		select {
-		case val := <-ch1:
-			fmt.Printf("Reçu du channel 1: %d\n", val)
-		case val := <-ch2:
-			fmt.Printf("Reçu du channel 2: %d\n", val)
-		}
+	// for {
+	// 	select {
+	// 	case val := <-ch1:
+	// 		fmt.Printf("Reçu du channel 1: %d\n", val)
+	// 	case val := <-ch2:
+	// 		fmt.Printf("Reçu du channel 2: %d\n", val)
+	// 	}
+	// }
+
+
+
+
+
+	// Exercice 5
+	var wg sync.WaitGroup
+
+	numGoroutines := 5
+	wg.Add(numGoroutines)
+	for i := 0; i < numGoroutines; i++ {
+		go increment(&wg)
 	}
+
+	wg.Wait()
+
+	fmt.Printf("Valeur finale du compteur: %d\n", counter)
 }
